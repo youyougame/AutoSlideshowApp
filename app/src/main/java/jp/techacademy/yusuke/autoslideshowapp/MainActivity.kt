@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        //画僧の許可
+        //画像の許可
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 getContentsInfo()
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             if (mumap[imageNum] != null) {
                 imageView.setImageURI(mumap[imageNum])
             } else {
-                imageNum -= (imageNum-1)
+                imageNum = 1
                 imageView.setImageURI(mumap[imageNum])
             }
         }
@@ -91,7 +91,12 @@ class MainActivity : AppCompatActivity() {
                     override fun run() {
                         mHandler.post {
                             imageNum++
-                            imageView.setImageURI(mumap[imageNum])
+                            if (mumap[imageNum] != null) {
+                                imageView.setImageURI(mumap[imageNum])
+                            } else {
+                                imageNum = 1
+                                imageView.setImageURI(mumap[imageNum])
+                            }
                         }
                     }
                 }, 2000, 2000)
@@ -117,6 +122,10 @@ class MainActivity : AppCompatActivity() {
             PERMISSION_REQUEST_CODE ->
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getContentsInfo()
+                } else {
+                    buttonNext.isEnabled = false
+                    buttonBack.isEnabled = false
+                    buttonPlay.isEnabled = false
                 }
         }
     }
